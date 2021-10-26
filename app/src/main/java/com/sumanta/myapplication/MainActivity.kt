@@ -3,6 +3,7 @@ package com.sumanta.myapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sumanta.myapplication.util.QuoteApplication
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider(this, MainViewModelFactory(repository)).get(MainViewModel::class.java)
 
         mainViewModel.quote.observe(this, Observer {
-            Log.d("Sumanta", it.results.toString())
+            Toast.makeText(this,it.results.size.toString(), Toast.LENGTH_LONG).show()
         })
     }
 }

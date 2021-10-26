@@ -1,14 +1,17 @@
 package com.sumanta.myapplication.repo
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sumanta.myapplication.api.QuoteService
 import com.sumanta.myapplication.db.QuoteDatabase
 import com.sumanta.myapplication.models.QuoteList
+import com.sumanta.myapplication.util.NetworkUtils
 
 class QuoteRepository(
     private var quoteService: QuoteService,
-    private val quoteDatabase: QuoteDatabase
+    private val quoteDatabase: QuoteDatabase,
+    private val applicationContext: Context
 ) {
 
     private val quoteLiveData = MutableLiveData<QuoteList>()
@@ -17,10 +20,18 @@ class QuoteRepository(
         get() = quoteLiveData
 
     suspend fun getQuotes(page: Int) {
-        val result = quoteService.getQuotes(page)
-        if (result?.body() != null) {
-            quoteDatabase.quoteDao().addQuotes(result.body()!!.results)
-            quoteLiveData.postValue(result.body())
+        // internet access on android
+        if (NetworkUtils.isInternetAvailable(applicationContext)){
+            val result = quoteService.getQuotes(page)
+            if (result?.body() != null) {
+                quoteDatabase.quoteDao().addQuotes(result.body()!!.results)
+                quoteLiveData.postValue(result.body())
+            }
+        }else{
+            val quote = quoteDatabase.quoteDao().getQuotes()
+            val quoteList = QuoteList(1,1,1,quote,1,1)
+            quoteLiveData.postValue(quoteList)
         }
+
     }
 }
