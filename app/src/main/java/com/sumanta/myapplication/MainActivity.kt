@@ -1,18 +1,13 @@
 package com.sumanta.myapplication
 
-import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.sumanta.myapplication.api.QuoteService
-import com.sumanta.myapplication.api.RetrofitHelper
-import com.sumanta.myapplication.repo.QuoteRepository
-import com.sumanta.myapplication.utel.QuoteApplication
+import com.sumanta.myapplication.util.QuoteApplication
 import com.sumanta.myapplication.viewmodel.MainViewModel
 import com.sumanta.myapplication.viewmodel.MainViewModelFactory
-import retrofit2.create
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel

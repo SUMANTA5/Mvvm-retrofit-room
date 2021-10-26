@@ -1,4 +1,4 @@
-package com.sumanta.myapplication.utel
+package com.sumanta.myapplication.util
 
 import android.app.Application
 import com.sumanta.myapplication.api.QuoteService
