@@ -1,5 +1,6 @@
 package com.sumanta.myapplication
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.sumanta.myapplication.api.QuoteService
 import com.sumanta.myapplication.api.RetrofitHelper
 import com.sumanta.myapplication.repo.QuoteRepository
+import com.sumanta.myapplication.utel.QuoteApplication
 import com.sumanta.myapplication.viewmodel.MainViewModel
 import com.sumanta.myapplication.viewmodel.MainViewModelFactory
 import retrofit2.create
@@ -18,9 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val quoteService = RetrofitHelper.getInstance().create(QuoteService::class.java)
-        val repository = QuoteRepository(quoteService)
-
+        val repository = (application as QuoteApplication).quoteRepository
         mainViewModel =
             ViewModelProvider(this, MainViewModelFactory(repository)).get(MainViewModel::class.java)
 
