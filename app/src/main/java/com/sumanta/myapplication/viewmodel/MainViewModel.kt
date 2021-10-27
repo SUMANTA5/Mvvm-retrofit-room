@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sumanta.myapplication.models.QuoteList
 import com.sumanta.myapplication.repo.QuoteRepository
+import com.sumanta.myapplication.repo.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -16,7 +17,8 @@ class MainViewModel(private val repository: QuoteRepository): ViewModel() {
         }
     }
 
-    val quote: LiveData<QuoteList>
+    //error handling
+    val quote: LiveData<Response<QuoteList>>
     get() = repository.quotes
 
 }
