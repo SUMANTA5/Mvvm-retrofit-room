@@ -7,6 +7,7 @@ import com.sumanta.myapplication.api.QuoteService
 import com.sumanta.myapplication.db.QuoteDatabase
 import com.sumanta.myapplication.models.QuoteList
 import com.sumanta.myapplication.util.NetworkUtils
+import java.lang.Exception
 
 class QuoteRepository(
     private var quoteService: QuoteService,
@@ -14,23 +15,34 @@ class QuoteRepository(
     private val applicationContext: Context
 ) {
 
-    private val quoteLiveData = MutableLiveData<QuoteList>()
+    //error handling
+    private val quoteLiveData = MutableLiveData<Response<QuoteList>>()
 
-    val quotes: LiveData<QuoteList>
+    //error handling
+    val quotes: LiveData<Response<QuoteList>>
         get() = quoteLiveData
 
     suspend fun getQuotes(page: Int) {
         // internet access on android
         if (NetworkUtils.isInternetAvailable(applicationContext)){
-            val result = quoteService.getQuotes(page)
-            if (result?.body() != null) {
-                quoteDatabase.quoteDao().addQuotes(result.body()!!.results)
-                quoteLiveData.postValue(result.body())
+           //error handling
+            try {
+                val result = quoteService.getQuotes(page)
+                if (result?.body() != null) {
+                    quoteDatabase.quoteDao().addQuotes(result.body()!!.results)
+                    quoteLiveData.postValue(Response.Success(result.body()))
+                }else{
+                    quoteLiveData.postValue(Response.Error("API Error"))
+                }
             }
+            catch (e: Exception){
+                quoteLiveData.postValue(Response.Error(e.message.toString()))
+            }
+
         }else{
             val quote = quoteDatabase.quoteDao().getQuotes()
             val quoteList = QuoteList(1,1,1,quote,1,1)
-            quoteLiveData.postValue(quoteList)
+            quoteLiveData.postValue(Response.Success(quoteList))
         }
     }
 
